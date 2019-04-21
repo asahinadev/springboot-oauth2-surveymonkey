@@ -1,0 +1,29 @@
+server:
+  port: 9002
+  ssl:
+    key-store:          "classpath:keystore.p12"
+    key-store-password: "12345678"
+    key-store-type:     "PKCS12"
+    key-alias:          "tomcat"
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          surveymonkey:
+            provider:                     "surveymonkey"
+            client-name:                  "Surveymonkey"
+            client-id:                    "[env]"
+            client-secret:                "[env]"
+            authorization-grant-type:     "authorization_code"
+            client-authentication-method: "POST"
+            redirect-uri:                 "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider: 
+          surveymonkey:
+            authorization-uri:   "https://api.surveymonkey.com/oauth/authorize"
+            token-uri:           "https://api.surveymonkey.com/oauth/token"
+            user-info-uri:       "https://api.surveymonkey.com/v3/users/me"
+
+logging:  level:    com.example:                                 "DEBUG"
+    org.springframework.web.client.RestTemplate: "DEBUG"  
