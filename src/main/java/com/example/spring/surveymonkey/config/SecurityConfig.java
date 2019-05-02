@@ -40,27 +40,40 @@ public class SecurityConfig
 	}
 
 	@Override
-	protected void configure(AuthenticationManagerBuilder auth)
-			throws Exception {
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		super.configure(auth);
 	}
 
 	@Override
 	protected void configure(HttpSecurity http)
 			throws Exception {
-
 		super.configure(http);
 
 		http.formLogin().disable();
 		http.logout().disable();
+
 		http.httpBasic().disable();
+
 		http.csrf().disable();
 
 		http.oauth2Login()
 
+				// 認証エンドポイント
+				.authorizationEndpoint()
+				.and()
+
+				// リダイレクトエンドポイント
+				.redirectionEndpoint()
+				.and()
+
+				// アクセストークンエンドポイント
+				.tokenEndpoint()
+				.and()
+
 				// ユーザー情報エンドポイント
 				.userInfoEndpoint()
-				.customUserType(SurveymonkeyUser.class, "surveymonkey");
+				.customUserType(SurveymonkeyUser.class, "surveymonkey")
+				.and();
 
 	}
 }
