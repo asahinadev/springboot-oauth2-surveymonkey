@@ -6,6 +6,10 @@ server:
     key-store-type:     "PKCS12"
     key-alias:          "tomcat"
 
+# env settings
+# spring.security.oauth2.client.registration.surveymonkey.client-id
+# spring.security.oauth2.client.registration.surveymonkey.client-secret
+
 spring:
   security:
     oauth2:
@@ -14,11 +18,35 @@ spring:
           surveymonkey:
             provider:                     "surveymonkey"
             client-name:                  "Surveymonkey"
+            redirect-uri:                 "{baseUrl}/login/oauth2/code/{registrationId}"
+            
             client-id:                    "[env]"
             client-secret:                "[env]"
+
             authorization-grant-type:     "authorization_code"
-            client-authentication-method: "POST"
-            redirect-uri:                 "{baseUrl}/login/oauth2/code/{registrationId}"
+            client-authentication-method: "post"
+#           scope:#           - "surveys_read"
+#           - "surveys_write"
+#           - "collectors_read"
+#           - "collectors_write"
+#           - "contacts_read"
+#           - "contacts_write"
+#           - "responses_read"
+#           - "responses_read_detail"
+#           - "responses_write"
+#           - "webhooks_read"
+#           - "webhooks_write"
+#           - "users_read"
+#           - "groups_read"
+#           - "library_read"
+#           - "workgroups_read"
+#           - "workgroups_write"
+#           - "workgroups_members_read"
+#           - "workgroups_members_write"
+#           - "roles_read"
+#           - "roles_write"
+#           - "workgroups_shares_read"
+#           - "workgroups_shares_write"
         provider: 
           surveymonkey:
             authorization-uri:   "https://api.surveymonkey.com/oauth/authorize"
