@@ -1,11 +1,10 @@
 package com.example.spring.surveymonkey.oauth.user;
 
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,6 +13,7 @@ import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +21,24 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SurveymonkeyUser
-		implements OAuth2User, Map<String, Object> {
+		implements OAuth2User {
+
+	public static final String ID = "id";
+	public static final String USERNAME = "username";
+	public static final String FIRST_NAME = "first_name";
+	public static final String LAST_NAME = "last_name";
+	public static final String LANGUAGE = "language";
+	public static final String EMAIL = "email";
+	public static final String EMAIL_VERIFIED = "email_verified";
+	public static final String ACCOUNT_TYPE = "account_type";
+	public static final String DATE_CREATED = "date_created";
+	public static final String DATE_LAST_LOGIN = "date_last_login";
+	public static final String SCOPES = "scopes";
+	public static final String SCOPES__AVAILABLE = "available";
+	public static final String SCOPES__GRANTED = "granted";
+
+	@JsonProperty(SCOPES)
+	Map<String, List<String>> scopes = new HashMap<>();
 
 	@JsonAnySetter
 	Map<String, Object> extraParameters = new HashMap<>();
@@ -29,11 +46,11 @@ public class SurveymonkeyUser
 	@Override
 	@JsonIgnore
 	public String getName() {
-		return String.valueOf(get("id"));
+		return getAttributes().get(ID).toString();
 	}
 
 	public String getEmail() {
-		return String.valueOf(get("email"));
+		return getAttributes().get(EMAIL).toString();
 	}
 
 	@Override
@@ -47,55 +64,15 @@ public class SurveymonkeyUser
 	@Override
 	@JsonIgnore
 	public Map<String, Object> getAttributes() {
-		return this.getExtraParameters();
+
+		Map<String, Object> attribute = new HashMap<>(this.getExtraParameters());
+		attribute.put(SCOPES, getScopes());
+		return Collections.unmodifiableMap(attribute);
 	}
 
-	public int size() {
-		return extraParameters.size();
-	}
-
-	public boolean isEmpty() {
-		return extraParameters.isEmpty();
-	}
-
-	public boolean containsKey(Object key) {
-		return extraParameters.containsKey(key);
-	}
-
-	public boolean containsValue(Object value) {
-		return extraParameters.containsValue(value);
-	}
-
-	public Object get(Object key) {
-		return extraParameters.get(key);
-	}
-
-	public Object put(String key, Object value) {
-		return extraParameters.put(key, value);
-	}
-
-	public Object remove(Object key) {
-		return extraParameters.remove(key);
-	}
-
-	public void putAll(Map<? extends String, ? extends Object> m) {
-		extraParameters.putAll(m);
-	}
-
-	public void clear() {
-		extraParameters.clear();
-	}
-
-	public Set<String> keySet() {
-		return extraParameters.keySet();
-	}
-
-	public Collection<Object> values() {
-		return extraParameters.values();
-	}
-
-	public Set<Entry<String, Object>> entrySet() {
-		return extraParameters.entrySet();
+	@Override
+	public String toString() {
+		return getAttributes().toString();
 	}
 
 }
