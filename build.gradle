@@ -30,7 +30,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '2.4.1'
 	
+	implementation group: 'org.webjars', name: 'webjars-locator-core', version: '0.43'
+	implementation group: 'org.webjars', name: 'jquery', version: '3.4.1'
+	implementation group: 'org.webjars', name: 'popper.js', version: '1.15.0'
+	implementation group: 'org.webjars', name: 'bootstrap', version: '4.4.1'
+	implementation group: 'org.webjars', name: 'font-awesome', version: '5.12.0'
+
 	developmentOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	
