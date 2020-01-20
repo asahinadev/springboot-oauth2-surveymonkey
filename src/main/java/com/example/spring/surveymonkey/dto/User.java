@@ -1,6 +1,7 @@
 package com.example.spring.surveymonkey.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ import lombok.SneakyThrows;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User
 		implements OAuth2User {
+
 	@JsonProperty
 	String id;
 
@@ -63,6 +65,9 @@ public class User
 
 	@JsonProperty("scopes")
 	Map<String, List<String>> scopes = new HashMap<>();
+
+	@JsonProperty("sso_connections")
+	List<String> ssoConnections = new ArrayList<>();
 
 	@JsonAnySetter
 	Map<String, Object> extraParameters = new HashMap<>();
