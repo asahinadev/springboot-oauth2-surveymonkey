@@ -7,7 +7,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-import com.example.spring.surveymonkey.oauth.user.SurveymonkeyUser;
+import com.example.spring.surveymonkey.dto.User;
 
 @Configuration
 @EnableWebSecurity
@@ -72,7 +72,7 @@ public class SecurityConfig
 
 				// ユーザー情報エンドポイント
 				.userInfoEndpoint()
-				.customUserType(SurveymonkeyUser.class, "surveymonkey")
+				.customUserType(User.class, "surveymonkey")
 				.and();
 
 	}

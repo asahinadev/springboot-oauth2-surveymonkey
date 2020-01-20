@@ -1,5 +1,6 @@
-package com.example.spring.surveymonkey.oauth.user;
+package com.example.spring.surveymonkey.dto;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,45 +13,63 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.SneakyThrows;
 
-@Getter
-@Setter
-public class SurveymonkeyUser
+@Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class User
 		implements OAuth2User {
+	@JsonProperty
+	String id;
 
-	public static final String ID = "id";
-	public static final String USERNAME = "username";
-	public static final String FIRST_NAME = "first_name";
-	public static final String LAST_NAME = "last_name";
-	public static final String LANGUAGE = "language";
-	public static final String EMAIL = "email";
-	public static final String EMAIL_VERIFIED = "email_verified";
-	public static final String ACCOUNT_TYPE = "account_type";
-	public static final String DATE_CREATED = "date_created";
-	public static final String DATE_LAST_LOGIN = "date_last_login";
-	public static final String SCOPES = "scopes";
-	public static final String SCOPES__AVAILABLE = "available";
-	public static final String SCOPES__GRANTED = "granted";
+	@JsonProperty
+	String username;
 
-	@JsonProperty(SCOPES)
+	@JsonProperty("first_name")
+	String firstName;
+
+	@JsonProperty("last_name")
+	String lastName;
+
+	@JsonProperty("account_type")
+	String accountType;
+
+	@JsonProperty
+	String language;
+
+	@JsonProperty
+	String email;
+
+	@JsonProperty("email_verified")
+	Boolean emailVerified;
+
+	@JsonProperty
+	String href;
+
+	@JsonProperty("date_last_login")
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX")
+	LocalDateTime dateLastLogin;
+
+	@JsonProperty("date_created")
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+	LocalDateTime dateCreated;
+
+	@JsonProperty("scopes")
 	Map<String, List<String>> scopes = new HashMap<>();
 
 	@JsonAnySetter
 	Map<String, Object> extraParameters = new HashMap<>();
 
 	@Override
-	@JsonIgnore
 	public String getName() {
-		return getAttributes().get(ID).toString();
-	}
-
-	public String getEmail() {
-		return getAttributes().get(EMAIL).toString();
+		return getId();
 	}
 
 	@Override
@@ -66,13 +85,14 @@ public class SurveymonkeyUser
 	public Map<String, Object> getAttributes() {
 
 		Map<String, Object> attribute = new HashMap<>(this.getExtraParameters());
-		attribute.put(SCOPES, getScopes());
+		attribute.put("scopes", getScopes());
+
 		return Collections.unmodifiableMap(attribute);
 	}
 
-	@Override
+	@SneakyThrows
 	public String toString() {
-		return getAttributes().toString();
+		return new ObjectMapper().writeValueAsString(this);
 	}
 
 }

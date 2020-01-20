@@ -1,12 +1,14 @@
 plugins {
 	id 'org.springframework.boot' version '2.1.5.RELEASE'
 	id 'java'
+	id 'eclipse'
 }
 
 apply plugin: 'io.spring.dependency-management'
 
 group = 'com.example.spring'
 version = '0.0.1'
+
 sourceCompatibility = '11'
 
 configurations {
@@ -28,10 +30,40 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
+	
+	developmentOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
+	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+
+eclipse {
+    project {
+        name = 'spring-oauth2-surveymonkey'
+        natures 'org.eclipse.buildship.core.gradleprojectnature'
+        natures 'org.thymeleaf.extras.eclipse.core.ThymeleafNature'
+        
+        buildCommand 'org.eclipse.buildship.core.gradleprojectbuilder'
+        buildCommand 'org.springframework.ide.eclipse.boot.validation.springbootbuilder'
+        
+        File f1 = file('.settings/org.eclipse.core.resources.prefs')
+        f1.write('eclipse.preferences.version=1\n')
+        f1.append('encoding/<project>=UTF-8')
+
+        File f2 = file('.settings/org.eclipse.jdt.core.prefs')
+		f2.append('org.eclipse.jdt.core.formatter.lineSplit=120\n')
+		f2.append('org.eclipse.jdt.core.formatter.join_wrapped_lines=false\n')
+		f2.append('org.eclipse.jdt.core.formatter.comment.format_javadoc_comments=false\n')
+		f2.append('org.eclipse.jdt.core.formatter.comment.format_line_comments=false\n')
+		f2.append('org.eclipse.jdt.core.formatter.comment.line_length=80\n')
+		f2.append('org.eclipse.jdt.core.formatter.comment.format_block_comments=false\n')
+		f2.append('org.eclipse.jdt.core.formatter.use_on_off_tags=true\n')
+		f2.append('org.eclipse.jdt.core.formatter.use_tabs_only_for_leading_indentations=false\n')
+
+    }
 }
