@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.1.5.RELEASE'
+	id 'org.springframework.boot' version '2.2.2.RELEASE'
 	id 'java'
 	id 'eclipse'
 }
@@ -7,15 +7,18 @@ plugins {
 apply plugin: 'io.spring.dependency-management'
 
 group = 'com.example.spring'
-version = '0.0.1'
+version = '0.0.1-SNAPSHOT'
 
-sourceCompatibility = '11'
+sourceCompatibility = 12
+targetCompatibility  = 12
 
 configurations {
 	developmentOnly
+	
 	runtimeClasspath {
 		extendsFrom developmentOnly
 	}
+	
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
@@ -64,7 +67,7 @@ eclipse {
         f1.append('encoding/<project>=UTF-8')
 
         File f2 = file('.settings/org.eclipse.jdt.core.prefs')
-		f2.append('org.eclipse.jdt.core.formatter.lineSplit=120\n')
+		f2.append('org.eclipse.jdt.core.formatter.lineSplit=150\n')
 		f2.append('org.eclipse.jdt.core.formatter.join_wrapped_lines=false\n')
 		f2.append('org.eclipse.jdt.core.formatter.comment.format_javadoc_comments=false\n')
 		f2.append('org.eclipse.jdt.core.formatter.comment.format_line_comments=false\n')
@@ -75,3 +78,9 @@ eclipse {
 
     }
 }
+
+javadoc {
+    options.charSet = 'UTF-8'
+    options.encoding = 'UTF-8'
+}
+
