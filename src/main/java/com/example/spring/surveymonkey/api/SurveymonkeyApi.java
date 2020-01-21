@@ -1,5 +1,6 @@
 package com.example.spring.surveymonkey.api;
 
+import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,10 @@ public class SurveymonkeyApi {
 	public SurveymonkeyApi(OAuth2AuthorizedClientService clientService) {
 		super();
 		this.clientService = clientService;
+	}
+
+	public <T> T get(String url, ParameterizedTypeReference<T> typeReference) {
+		return get(url, Collections.emptyMap(), typeReference);
 	}
 
 	public <T> T get(String url, Map<String, String> pathValue, ParameterizedTypeReference<T> typeReference) {
