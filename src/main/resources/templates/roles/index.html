@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5"
+	class="h-100">
+<head>
+
+<meta charset="utf-8">
+
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<title>成功</title>
+
+<!-- Bootstrap core CSS -->
+<link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"
+	rel="stylesheet">
+<link th:href="@{/css/common.css}" rel="stylesheet">
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+</head>
+<body class="d-flex flex-column h-100">
+
+
+	<!-- Begin page content -->
+	<section id="main" class="flex-shrink-0">
+		<div class="container">
+			<div class="list-group">
+				<div class="list-group-item" th:each="item : ${roles.data}"
+					th:text="${item.id}"></div>
+			</div>
+		</div>
+	</section>
+
+
+</body>
+</html>
+
