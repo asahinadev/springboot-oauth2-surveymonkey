@@ -27,5 +27,5 @@ spring:
 logging:
   level:
     root: WARN
-    com.example.spring.yconnect: DEBUG
+    com.example.spring: DEBUG
     org.springframework.web.client.RestTemplate: DEBUG

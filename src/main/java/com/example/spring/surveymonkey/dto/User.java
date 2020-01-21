@@ -1,6 +1,6 @@
 package com.example.spring.surveymonkey.dto;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,12 +13,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 
+import com.example.spring.surveymonkey.serializer.OffsetDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -56,12 +57,12 @@ public class User
 	String href;
 
 	@JsonProperty("date_last_login")
-	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX")
-	LocalDateTime dateLastLogin;
+	@JsonSerialize(using = OffsetDateTimeSerializer.IsoOffsetDateTime.class)
+	OffsetDateTime dateLastLogin;
 
 	@JsonProperty("date_created")
-	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
-	LocalDateTime dateCreated;
+	@JsonSerialize(using = OffsetDateTimeSerializer.IsoOffsetDateTime.class)
+	OffsetDateTime dateCreated;
 
 	@JsonProperty("scopes")
 	Map<String, List<String>> scopes = new HashMap<>();
