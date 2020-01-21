@@ -1,115 +1,69 @@
 package com.example.spring.surveymonkey.controller;
 
-import org.apache.groovy.util.Maps;
+import java.util.Collections;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.example.spring.surveymonkey.dto.User;
-import com.example.spring.surveymonkey.dto.Workgroup;
+import com.example.spring.surveymonkey.api.SurveymonkeyApi;
 import com.example.spring.surveymonkey.dto.Pager;
 import com.example.spring.surveymonkey.dto.Shared;
+import com.example.spring.surveymonkey.dto.User;
+import com.example.spring.surveymonkey.dto.Workgroup;
+import com.example.spring.surveymonkey.typereference.SharedsType;
+import com.example.spring.surveymonkey.typereference.UserType;
+import com.example.spring.surveymonkey.typereference.WorkgroupsType;
 
 @RequestMapping("/users")
 @Controller
 public class UsersController {
 
-	final OAuth2AuthorizedClientService clientService;
-
-	@ResponseBody
-	@ExceptionHandler(HttpClientErrorException.class)
-	public String exceptionHandler(HttpClientErrorException exception) {
-		return exception.getMessage();
-	}
+	final SurveymonkeyApi api;
 
 	@Autowired
-	public UsersController(OAuth2AuthorizedClientService clientService) {
-		this.clientService = clientService;
+	public UsersController(SurveymonkeyApi api) {
+		this.api = api;
 	}
 
 	@GetMapping("me")
-	public String me(Model model, @AuthenticationPrincipal User user) {
-
-		OAuth2AuthorizedClient client = clientService.loadAuthorizedClient("surveymonkey", user.getId());
-
-		RestTemplate restTemplate = new RestTemplate();
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setBearerAuth(client.getAccessToken().getTokenValue());
-
-		RequestEntity<?> requestEntity = new RequestEntity<>(
-				headers,
-				HttpMethod.GET,
-				UriComponentsBuilder.fromHttpUrl("https://api.surveymonkey.com/v3/users/me").build().toUri());
-
-		ResponseEntity<User> responseEntity = restTemplate.exchange(requestEntity, User.class);
-
-		model.addAttribute("user", responseEntity.getBody());
+	public String me(Model model) {
+		User user = api.get("/v3/users/me", Collections.emptyMap(), new UserType());
+		model.addAttribute("user", user);
 		return "users/index";
 	}
 
 	@GetMapping("workgroups")
-	public String workgroups(Model model, @AuthenticationPrincipal User user) {
-
-		OAuth2AuthorizedClient client = clientService.loadAuthorizedClient("surveymonkey", user.getId());
-
-		RestTemplate restTemplate = new RestTemplate();
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setBearerAuth(client.getAccessToken().getTokenValue());
-
-		RequestEntity<?> requestEntity = new RequestEntity<>(
-				headers,
-				HttpMethod.GET,
-				UriComponentsBuilder.fromHttpUrl("https://api.surveymonkey.com/v3/users/{id}/workgroups")
-						.build(Maps.of("id", user.getId())));
-
-		ResponseEntity<Pager<Workgroup>> responseEntity = restTemplate.exchange(requestEntity,
-				new ParameterizedTypeReference<Pager<Workgroup>>() {
-				});
-
-		model.addAttribute("workgroups", responseEntity.getBody());
-
-		return "users/workgroups";
+	public RedirectView workgroups() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return new RedirectView(UriComponentsBuilder.fromPath("/users/{id}/workgroups").build(authentication.getName()).getPath());
 	}
 
 	@GetMapping("shared")
-	public String shared(Model model, @AuthenticationPrincipal User user) {
+	public RedirectView shared() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return new RedirectView(UriComponentsBuilder.fromPath("/users/{id}/shared").build(authentication.getName()).getPath());
+	}
 
-		OAuth2AuthorizedClient client = clientService.loadAuthorizedClient("surveymonkey", user.getId());
+	@GetMapping("{id}/workgroups")
+	public String workgroups(Model model, @PathVariable Map<String, String> pathValue) {
+		Pager<Workgroup> workgroups = api.get("/v3/users/{id}/workgroups", pathValue, new WorkgroupsType());
+		model.addAttribute("workgroups", workgroups);
+		return "users/workgroups";
+	}
 
-		RestTemplate restTemplate = new RestTemplate();
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setBearerAuth(client.getAccessToken().getTokenValue());
-
-		RequestEntity<?> requestEntity = new RequestEntity<>(
-				headers,
-				HttpMethod.GET,
-				UriComponentsBuilder.fromHttpUrl("https://api.surveymonkey.com/v3/users/{id}/shared")
-						.build(Maps.of("id", user.getId())));
-
-		ResponseEntity<Pager<Shared>> responseEntity = restTemplate.exchange(requestEntity,
-				new ParameterizedTypeReference<Pager<Shared>>() {
-				});
-
-		model.addAttribute("shared", responseEntity.getBody());
-
+	@GetMapping("{id}/shared")
+	public String shared(Model model, @PathVariable Map<String, String> pathValue) {
+		Pager<Shared> shareds = api.get("/v3/users/{id}/shared", pathValue, new SharedsType());
+		model.addAttribute("shareds", shareds);
 		return "users/shared";
 	}
 }
