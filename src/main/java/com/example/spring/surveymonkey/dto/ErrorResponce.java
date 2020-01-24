@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ErrorDto {
+public class ErrorResponce {
 
 	@JsonProperty
 	String id;

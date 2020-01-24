@@ -13,22 +13,22 @@ import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Pager<E> {
+public class SharedResponce {
+
+	@JsonProperty("workgroup_id")
+	String workgroupId;
 
 	@JsonProperty
-	Long page;
+	List<String> privileges = new ArrayList<>();
 
-	@JsonProperty
-	Map<String, String> links = new HashMap<String, String>();
+	@JsonProperty("share_id")
+	String shareId;
 
-	@JsonProperty("per_page")
-	Long perPage;
+	@JsonProperty("resource_type")
+	String resourceType;
 
-	@JsonProperty
-	Long total;
-
-	@JsonProperty
-	List<E> data = new ArrayList<E>();
+	@JsonProperty("resource_id")
+	String resourceId;
 
 	@JsonAnySetter
 	Map<String, Object> extraParameters = new HashMap<>();

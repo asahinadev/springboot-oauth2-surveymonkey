@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.example.spring.surveymonkey.serializer.LocalDateTimeSerializer;
+import com.example.spring.surveymonkey.serializer.DateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,7 +16,7 @@ import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Role {
+public class RoleResponce {
 
 	@JsonProperty
 	String id;
@@ -37,11 +37,11 @@ public class Role {
 	List<String> privileges = new ArrayList<>();
 
 	@JsonProperty("created_at")
-	@JsonSerialize(using = LocalDateTimeSerializer.IsoLocalDateTime.class)
+	@JsonSerialize(converter = DateTimeSerializer.LOCAL.class)
 	LocalDateTime createdAt;
 
 	@JsonProperty("updated_at")
-	@JsonSerialize(using = LocalDateTimeSerializer.IsoLocalDateTime.class)
+	@JsonSerialize(converter = DateTimeSerializer.LOCAL.class)
 	LocalDateTime updatedAt;
 
 	@JsonProperty

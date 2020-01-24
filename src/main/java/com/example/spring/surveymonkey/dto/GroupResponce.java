@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Group {
+public class GroupResponce {
 
 	@JsonProperty
 	String id;

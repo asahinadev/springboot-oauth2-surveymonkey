@@ -2,7 +2,7 @@ package com.example.spring.surveymonkey.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Member {
+public class MemberResponce {
 
 	@JsonProperty("is_owner")
 	Boolean owner;

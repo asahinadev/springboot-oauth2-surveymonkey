@@ -13,7 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 
-import com.example.spring.surveymonkey.serializer.OffsetDateTimeSerializer;
+import com.example.spring.surveymonkey.serializer.DateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -26,7 +26,7 @@ import lombok.SneakyThrows;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class User
+public class UserResponce
 		implements OAuth2User {
 
 	@JsonProperty
@@ -57,11 +57,11 @@ public class User
 	String href;
 
 	@JsonProperty("date_last_login")
-	@JsonSerialize(using = OffsetDateTimeSerializer.IsoOffsetDateTime.class)
+	@JsonSerialize(converter = DateTimeSerializer.OFFSET.class)
 	OffsetDateTime dateLastLogin;
 
 	@JsonProperty("date_created")
-	@JsonSerialize(using = OffsetDateTimeSerializer.IsoOffsetDateTime.class)
+	@JsonSerialize(converter = DateTimeSerializer.OFFSET.class)
 	OffsetDateTime dateCreated;
 
 	@JsonProperty("scopes")

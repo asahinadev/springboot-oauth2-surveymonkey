@@ -1,6 +1,5 @@
 package com.example.spring.surveymonkey.controller;
 
-import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +11,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.example.spring.surveymonkey.api.SurveymonkeyApi;
-import com.example.spring.surveymonkey.dto.Pager;
-import com.example.spring.surveymonkey.dto.Shared;
-import com.example.spring.surveymonkey.dto.User;
-import com.example.spring.surveymonkey.dto.Workgroup;
-import com.example.spring.surveymonkey.typereference.SharedsType;
-import com.example.spring.surveymonkey.typereference.UserType;
-import com.example.spring.surveymonkey.typereference.WorkgroupsType;
+import com.example.spring.surveymonkey.dto.Pagenate;
+import com.example.spring.surveymonkey.dto.SharedResponce;
+import com.example.spring.surveymonkey.dto.UserResponce;
+import com.example.spring.surveymonkey.dto.WorkgroupResponce;
+import com.example.spring.surveymonkey.helper.UriHelper;
+import com.example.spring.surveymonkey.type.SharedResponceType;
+import com.example.spring.surveymonkey.type.UserResponceType;
+import com.example.spring.surveymonkey.type.WorkgroupResponceType;
 
 @RequestMapping("/users")
 @Controller
@@ -36,7 +35,7 @@ public class UsersController {
 
 	@GetMapping("me")
 	public String me(Model model) {
-		User user = api.get("/v3/users/me", Collections.emptyMap(), new UserType());
+		UserResponce user = api.get("/v3/users/me", UserResponceType.SINGLE);
 		model.addAttribute("user", user);
 		return "users/index";
 	}
@@ -44,25 +43,25 @@ public class UsersController {
 	@GetMapping("workgroups")
 	public RedirectView workgroups() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return new RedirectView(UriComponentsBuilder.fromPath("/users/{id}/workgroups").build(authentication.getName()).getPath());
+		return new RedirectView(UriHelper.path("/users/{id}/workgroups", authentication.getName()));
 	}
 
 	@GetMapping("shared")
 	public RedirectView shared() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return new RedirectView(UriComponentsBuilder.fromPath("/users/{id}/shared").build(authentication.getName()).getPath());
+		return new RedirectView(UriHelper.path("/users/{id}/shared", authentication.getName()));
 	}
 
 	@GetMapping("{id}/workgroups")
 	public String workgroups(Model model, @PathVariable Map<String, String> pathValue) {
-		Pager<Workgroup> workgroups = api.get("/v3/users/{id}/workgroups", pathValue, new WorkgroupsType());
+		Pagenate<WorkgroupResponce> workgroups = api.get("/v3/users/{id}/workgroups", pathValue, WorkgroupResponceType.LIST);
 		model.addAttribute("workgroups", workgroups);
 		return "users/workgroups";
 	}
 
 	@GetMapping("{id}/shared")
 	public String shared(Model model, @PathVariable Map<String, String> pathValue) {
-		Pager<Shared> shareds = api.get("/v3/users/{id}/shared", pathValue, new SharedsType());
+		Pagenate<SharedResponce> shareds = api.get("/v3/users/{id}/shared", pathValue, SharedResponceType.LIST);
 		model.addAttribute("shareds", shareds);
 		return "users/shared";
 	}

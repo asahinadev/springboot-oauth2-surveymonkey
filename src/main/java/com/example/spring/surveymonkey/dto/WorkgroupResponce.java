@@ -6,16 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.spring.surveymonkey.serializer.DateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Workgroup {
+public class WorkgroupResponce {
 
 	@JsonProperty
 	String id;
@@ -33,27 +34,27 @@ public class Workgroup {
 	String description;
 
 	@JsonProperty("default_role")
-	Role defaultRole;
+	RoleResponce defaultRole;
 
 	@JsonProperty("created_at")
-	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+	@JsonSerialize(converter = DateTimeSerializer.LOCAL.class)
 	LocalDateTime createdAt;
 
 	@JsonProperty("updated_at")
-	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+	@JsonSerialize(converter = DateTimeSerializer.LOCAL.class)
 	LocalDateTime updatedAt;
 
 	@JsonProperty
-	List<Shared> shares = new ArrayList<>();
+	List<SharedResponce> shares = new ArrayList<>();
 
 	@JsonProperty("shares_count")
 	Long sharesCount;
 
 	@JsonProperty
-	Member membership;
+	MemberResponce membership;
 
 	@JsonProperty
-	List<Member> members = new ArrayList<>();
+	List<MemberResponce> members = new ArrayList<>();
 
 	@JsonProperty
 	Map<String, Object> metadata = new HashMap<>();

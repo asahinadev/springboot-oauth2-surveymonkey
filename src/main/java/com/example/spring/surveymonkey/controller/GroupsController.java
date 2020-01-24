@@ -1,6 +1,5 @@
 package com.example.spring.surveymonkey.controller;
 
-import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +10,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.spring.surveymonkey.api.SurveymonkeyApi;
-import com.example.spring.surveymonkey.dto.Group;
-import com.example.spring.surveymonkey.dto.Member;
-import com.example.spring.surveymonkey.dto.Pager;
-import com.example.spring.surveymonkey.typereference.GroupType;
-import com.example.spring.surveymonkey.typereference.GroupsType;
-import com.example.spring.surveymonkey.typereference.MemberType;
-import com.example.spring.surveymonkey.typereference.MembersType;
+import com.example.spring.surveymonkey.dto.GroupResponce;
+import com.example.spring.surveymonkey.dto.MemberResponce;
+import com.example.spring.surveymonkey.dto.Pagenate;
+import com.example.spring.surveymonkey.type.GroupResponceType;
+import com.example.spring.surveymonkey.type.MemberResponceType;
 
 @Controller
 @RequestMapping("/groups")
@@ -32,28 +29,28 @@ public class GroupsController {
 
 	@GetMapping("")
 	public String index(Model model) {
-		Pager<Group> groups = api.get("/v3/groups", Collections.emptyMap(), new GroupsType());
+		Pagenate<GroupResponce> groups = api.get("/v3/groups", GroupResponceType.LIST);
 		model.addAttribute("groups", groups);
 		return "groups/index";
 	}
 
 	@GetMapping("{id}")
 	public String group(Model model, @PathVariable Map<String, String> pathValue) {
-		Group group = api.get("/v3/groups/{id}", pathValue, new GroupType());
+		GroupResponce group = api.get("/v3/groups/{id}", pathValue, GroupResponceType.SINGLE);
 		model.addAttribute("group", group);
 		return "groups/form";
 	}
 
 	@GetMapping("{id}/members")
 	public String members(Model model, @PathVariable Map<String, String> pathValue) {
-		Pager<Member> members = api.get("/v3/groups/{id}/members", pathValue, new MembersType());
+		Pagenate<MemberResponce> members = api.get("/v3/groups/{id}/members", pathValue, MemberResponceType.LIST);
 		model.addAttribute("members", members);
 		return "users/members";
 	}
 
 	@GetMapping("{id}/members/{uid}")
 	public String member(Model model, @PathVariable Map<String, String> pathValue) {
-		Member member = api.get("/v3/groups/{id}/members/{uid}", pathValue, new MemberType());
+		MemberResponce member = api.get("/v3/groups/{id}/members/{uid}", pathValue, MemberResponceType.SINGLE);
 		model.addAttribute("member", member);
 		return "groups/member";
 	}
