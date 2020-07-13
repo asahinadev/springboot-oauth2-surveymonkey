@@ -1,24 +1,18 @@
 plugins {
-	id 'org.springframework.boot' version '2.2.2.RELEASE'
+	id 'org.springframework.boot' version '2.3.1.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id "com.avast.gradle.docker-compose" version "0.12.1"
 	id 'java'
 	id 'eclipse'
 }
 
-apply plugin: 'io.spring.dependency-management'
+group = 'com.example.spring.oauth2'
+version = '0.0.1'
 
-group = 'com.example.spring'
-version = '0.0.1-SNAPSHOT'
-
-sourceCompatibility = 12
-targetCompatibility  = 12
+sourceCompatibility = 11
+targetCompatibility = 11
 
 configurations {
-	developmentOnly
-	
-	runtimeClasspath {
-		extendsFrom developmentOnly
-	}
-	
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
@@ -32,55 +26,46 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-
-	implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '2.4.1'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.apache.commons:commons-lang3'
 	
-	implementation group: 'org.webjars', name: 'webjars-locator-core', version: '0.43'
-	implementation group: 'org.webjars', name: 'jquery', version: '3.4.1'
-	implementation group: 'org.webjars', name: 'popper.js', version: '1.15.0'
-	implementation group: 'org.webjars', name: 'bootstrap', version: '4.4.1'
-	implementation group: 'org.webjars', name: 'font-awesome', version: '5.12.0'
+	runtimeOnly         'org.springframework.boot:spring-boot-devtools'
 
-	developmentOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
-	
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation 'org.springframework.security:spring-security-test' 
 }
 
-
-eclipse {
-    project {
-        name = 'spring-oauth2-surveymonkey'
-        natures 'org.eclipse.buildship.core.gradleprojectnature'
-        natures 'org.thymeleaf.extras.eclipse.core.ThymeleafNature'
-        
-        buildCommand 'org.eclipse.buildship.core.gradleprojectbuilder'
-        buildCommand 'org.springframework.ide.eclipse.boot.validation.springbootbuilder'
-        
-        File f1 = file('.settings/org.eclipse.core.resources.prefs')
-        f1.write('eclipse.preferences.version=1\n')
-        f1.append('encoding/<project>=UTF-8')
-
-        File f2 = file('.settings/org.eclipse.jdt.core.prefs')
-		f2.append('org.eclipse.jdt.core.formatter.lineSplit=150\n')
-		f2.append('org.eclipse.jdt.core.formatter.join_wrapped_lines=false\n')
-		f2.append('org.eclipse.jdt.core.formatter.comment.format_javadoc_comments=false\n')
-		f2.append('org.eclipse.jdt.core.formatter.comment.format_line_comments=false\n')
-		f2.append('org.eclipse.jdt.core.formatter.comment.line_length=80\n')
-		f2.append('org.eclipse.jdt.core.formatter.comment.format_block_comments=false\n')
-		f2.append('org.eclipse.jdt.core.formatter.use_on_off_tags=true\n')
-		f2.append('org.eclipse.jdt.core.formatter.use_tabs_only_for_leading_indentations=false\n')
-
-    }
+test {
+	useJUnitPlatform()
 }
 
-javadoc {
-    options.charSet = 'UTF-8'
+compileJava {
     options.encoding = 'UTF-8'
 }
 
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+
+javadoc {
+    options.encoding = 'UTF-8'
+}
+
+eclipse {
+	project {
+		natures 'org.thymeleaf.extras.eclipse.core.ThymeleafNature'
+		natures 'org.eclipse.buildship.core.gradleprojectnature'
+		natures 'org.eclipse.jdt.core.javanature'
+
+		buildCommand 'org.eclipse.jdt.core.javabuilder'
+		buildCommand 'org.eclipse.buildship.core.gradleprojectbuilder'
+		buildCommand 'org.thymeleaf.extras.eclipse.core.ThymeleafBuilder'
+	}
+}

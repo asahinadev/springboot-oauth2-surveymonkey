@@ -1,26 +1,18 @@
 package com.example.spring.surveymonkey.controller;
 
-import java.util.Map;
+import java.util.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.security.core.*;
+import org.springframework.security.core.context.*;
+import org.springframework.stereotype.*;
+import org.springframework.ui.*;
+import org.springframework.web.bind.annotation.*;
 
-import com.example.spring.surveymonkey.api.SurveymonkeyApi;
-import com.example.spring.surveymonkey.dto.Pagenate;
-import com.example.spring.surveymonkey.dto.SharedResponce;
-import com.example.spring.surveymonkey.dto.UserResponce;
-import com.example.spring.surveymonkey.dto.WorkgroupResponce;
-import com.example.spring.surveymonkey.helper.UriHelper;
-import com.example.spring.surveymonkey.type.SharedResponceType;
-import com.example.spring.surveymonkey.type.UserResponceType;
-import com.example.spring.surveymonkey.type.WorkgroupResponceType;
+import com.example.spring.surveymonkey.api.*;
+import com.example.spring.surveymonkey.dto.*;
+import com.example.spring.surveymonkey.helper.*;
+import com.example.spring.surveymonkey.type.*;
 
 @RequestMapping("/users")
 @Controller
@@ -41,15 +33,15 @@ public class UsersController {
 	}
 
 	@GetMapping("workgroups")
-	public RedirectView workgroups() {
+	public String workgroups() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return new RedirectView(UriHelper.path("/users/{id}/workgroups", authentication.getName()));
+		return "redirect:" + UriHelper.path("/users/{id}/workgroups", authentication.getName());
 	}
 
 	@GetMapping("shared")
-	public RedirectView shared() {
+	public String shared() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return new RedirectView(UriHelper.path("/users/{id}/shared", authentication.getName()));
+		return "redirect:" + UriHelper.path("/users/{id}/shared", authentication.getName());
 	}
 
 	@GetMapping("{id}/workgroups")
